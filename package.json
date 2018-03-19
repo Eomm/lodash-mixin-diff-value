@@ -1,0 +1,30 @@
+{
+  "name": "lodash-mixin-diff-value",
+  "version": "0.0.1",
+  "description": "",
+  "main": "mixin.js",
+  "scripts": {
+    "test": "jest --coverage"
+  },
+  "keywords": [
+    "lodash",
+    "mixin",
+    "difference",
+    "values"
+  ],
+  "author": "Manuel Spigolon <behemoth89@gmail.com> (https://github.com/Eomm)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Eomm/lodash-mixin-diff-value"
+  },
+  "dependencies": {
+    "lodash": "^4.17.5"
+  },
+  "devDependencies": {
+    "eslint": "^4.19.0",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.9.0",
+    "eslint-plugin-jest": "^21.15.0"
+  }
+}
