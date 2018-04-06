@@ -5,18 +5,28 @@ const differenceValues = require('../mixin');
 
 _.mixin({ differenceValues });
 
-const baseJson = {
-  a: 'b',
-  arr: [1, 2, 3, { a: 111 }],
-  more: 'more',
+const baseJson = Object.freeze({
+  a: 'ORIGINAL',
+  arr: [1, 2, 3, { a: 1 }],
+  more: 'ORIGINAL',
   intarr: [1, 2, 3, 4],
-  newarr: [{ k: 'XXX' }, { k: 'val' }, 3333],
-  arrtwo: [{ k: 'nod' }, { k: 'val' }],
-  json: { a: 'a', b: 'b', d: { deep: [12, 3, { mode: 'deep' }], key: 'value' } },
-  o: { sub: 'json' },
-};
+  newarr: [{ k: 'ORIGINAL' }, { k: 'ORIGINAL' }, 2],
+  arrtwo: [{ k: 'ORIGINAL' }, { k: 'ORIGINAL' }],
+  json: { a: 'ORIGINAL', b: 'ORIGINAL', d: { deep: [1, { mode: 'ORIGINAL' }], key: 'ORIGINAL' } },
+  o: { sub: 'ORIGINAL' },
+});
 
 const clone = json => JSON.parse(JSON.stringify(json));
+const set = (json, paths, value) => paths.forEach((p) => {
+  const v = _.get(json, p);
+  if (_.isArray(v)) {
+    _.get(json, p, []).push(value);
+  } else {
+    _.set(json, p, value);
+  }
+});
+const add = (json, paths) => set(json, paths, 'ADD');
+const change = (json, paths) => set(json, paths, 'CHANGE');
 
 describe('mixin diff-value test', () => {
   it('nothing changed', () => {
@@ -27,11 +37,24 @@ describe('mixin diff-value test', () => {
   });
 
   it('only-changed values', () => {
-    const newValues = { a: 'new value', json: { d: { key: 'new value key' } } };
-    const newJson = Object.assign({}, clone(baseJson), newValues);
-    newJson.json.d.deep.push('new value on array');
+    const newJson = clone(baseJson);
+
+    const paths = [
+      'a',
+      'json.d.deep[0]',
+      'json.d.deep[1].mode',
+    ];
+
+    change(newJson, paths);
+    // This must not compare on the diff
+    add(newJson, ['newKey', 'json.d.deep']);
 
     const diff = _.differenceValues(newJson, baseJson, { extract: 'only-changed' });
-    // expect(diff).toMatchObject(); // TODO
+
+    const rightJson = {};
+    change(rightJson, paths);
+
+    const compare = _.isEqual(diff, rightJson);
+    expect(compare).toBeTruthy();
   });
 });

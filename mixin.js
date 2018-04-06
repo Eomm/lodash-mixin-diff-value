@@ -26,9 +26,9 @@ const mustAssignObject = object => Object.keys(object).length > 0;
 const mustAssignArray = array => array.length > 0;
 
 const valueToAssign = (value, checkValue, opts = {}) => {
-  console.log(`${value} vs ${checkValue}`);
+  // console.log(`${value} vs ${checkValue}`);
   if (_.isObjectLike(value)) {
-    const diffValue = differenceValues(value, checkValue, opts.extract);
+    const diffValue = differenceValues(value, checkValue, opts);
     if (mustAssignObject(diffValue)) {
       return diffValue;
     }
