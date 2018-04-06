@@ -29,16 +29,16 @@ const add = (json, paths) => set(json, paths, 'ADD');
 const change = (json, paths) => set(json, paths, 'CHANGE');
 
 describe('mixin diff-value test', () => {
+  let newJson;
+  beforeEach(() => { newJson = clone(baseJson); });
+
   it('nothing changed', () => {
-    const newJson = clone(baseJson);
     const diff = _.differenceValues(newJson, baseJson, { extract: 'only-changed' });
     expect(diff).toMatchObject({});
     expect(Object.keys(diff)).toHaveLength(0);
   });
 
   it('only-changed values', () => {
-    const newJson = clone(baseJson);
-
     const paths = [
       'a',
       'json.d.deep[0]',
@@ -53,6 +53,26 @@ describe('mixin diff-value test', () => {
 
     const rightJson = {};
     change(rightJson, paths);
+
+    const compare = _.isEqual(diff, rightJson);
+    expect(compare).toBeTruthy();
+  });
+
+  it('only-add values', () => {
+    const paths = [
+      'o.sub',
+      'json.d.deep[0]',
+      'json.d.deep[1].mode',
+    ];
+
+    change(newJson, paths);
+    add(newJson, ['newKey', 'json.d.deep', 'json.c']);
+
+    const diff = _.differenceValues(newJson, baseJson, { extract: 'only-add' });
+
+    const rightJson = {};
+    // added [0] otherwise lodash will use the not-existing field like key-value pair
+    add(rightJson, ['newKey', 'json.d.deep[0]', 'json.c']);
 
     const compare = _.isEqual(diff, rightJson);
     expect(compare).toBeTruthy();
