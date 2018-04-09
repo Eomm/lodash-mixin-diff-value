@@ -1,18 +1,5 @@
 # lodash-mixin-diff-value
-This is a lodash mixin for getting a JSON object that rappresent the value variation of an object respect another.
-
-# Roadmap
-
-This is a fast mixin because I need it "yesterday" (no-test, no-jdoc, no-better-lodash-imports), the taget is build an official lodash Object's function.
-
-The functions that will be implemented are:
-+ get a JSON with all the values from JSON-A that are changed respect JSON-B
-+ get a JSON with all the keys from JSON-A that are added respect JSON-B
-+ get a JSON with all the keys from JSON-A that are missing respect JSON-B
-+ autoloading mixin
-
-The actual functionality are:
-+ get a JSON with all the values from JSON-A that are changed or the keys added respect JSON-B
+This is a lodash mixin for getting a JSON object that rappresent the value variation of a JSON respect another.
 
 ## Installation
 
@@ -21,7 +8,7 @@ npm install lodash-mixin-diff-value
 ```
 
 
-### Usage
+## Usage
 
 ```js
 const _ = require('lodash');
@@ -29,6 +16,37 @@ const differenceValues = require('./lodash-mixin-diff-value');
 
 _.mixin({ differenceValues });
 
+const diff = _.differenceValues(editedJson, originalJson[, options]);
+```
+
+`options` is a json with the fields:
+
+| Key | Values | Default |
+| --- | ------ | ------- |
+| extract | `[only-add, only-remove, only-changed, only-add-change]` | `only-add-change`
+
+
+### Field: extract
+
++ `only-add`: will return only field that occurs in `editedJson` and not in `originalJson`
++ `only-remove`: will return only field that not occurs in `editedJson` and are in `originalJson`
++ `only-changed`: will return only field that occurs in `editedJson` and `originalJson` too
++ `only-add-change`: like `only-add` + `only-changed`
+
+
+## Test
+
+For run the tests simply execute:
+```
+npm test
+```
+
+
+## Example
+
+See test for more examples.
+
+```js
 const oldObj = {
   a: 'b',
   arr: [1, 2, 3, { a: 111 }],
@@ -51,11 +69,9 @@ const newObj = {
 };
 
 const out = _.differenceValues(newObj, oldObj);
-```
 
-This exeample will print out:
-```js
-out:  {
+// Will print out:
+{
   "arr": [
     22,
     {
@@ -71,7 +87,7 @@ out:  {
   "json": {
     "d": {
       "deep": [
-        666,
+        333,
         {
           "mode": "deeper"
         }
@@ -80,6 +96,14 @@ out:  {
   }
 }
 ```
+
+
+## Todo
+
++ JSDoc
++ Autoloading mixin and improve lodash dependancies
++ More test and validity-check
++ Manage Date and functions
 
 
 ## License

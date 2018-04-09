@@ -1,6 +1,6 @@
 {
   "name": "lodash-mixin-diff-value",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "",
   "main": "mixin.js",
   "scripts": {
@@ -25,6 +25,7 @@
     "eslint": "^4.19.0",
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.9.0",
-    "eslint-plugin-jest": "^21.15.0"
+    "eslint-plugin-jest": "^21.15.0",
+    "jest": "^22.4.3"
   }
 }
