@@ -27,6 +27,7 @@ const set = (json, paths, value) => paths.forEach((p) => {
 });
 const add = (json, paths) => set(json, paths, 'ADD');
 const change = (json, paths) => set(json, paths, 'CHANGE');
+const remove = (json, paths) => _.omit(json, paths);
 
 describe('mixin diff-value test', () => {
   let newJson;
@@ -74,6 +75,17 @@ describe('mixin diff-value test', () => {
     // added [0] otherwise lodash will use the not-existing field like key-value pair
     add(rightJson, ['newKey', 'json.d.deep[0]', 'json.c']);
 
+    const compare = _.isEqual(diff, rightJson);
+    expect(compare).toBeTruthy();
+  });
+
+  it('only-remove values', () => {
+    const removedFields = ['a', 'o', 'json.d', 'intarr'];
+    newJson = remove(newJson, removedFields);
+
+    const diff = _.differenceValues(newJson, baseJson, { extract: 'only-remove' });
+
+    const rightJson = remove(baseJson, removedFields);
     const compare = _.isEqual(diff, rightJson);
     expect(compare).toBeTruthy();
   });

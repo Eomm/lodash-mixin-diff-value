@@ -10,6 +10,7 @@ The functions that will be implemented are:
 + get a JSON with all the keys from JSON-A that are added respect JSON-B
 + get a JSON with all the keys from JSON-A that are missing respect JSON-B
 + autoloading mixin
++ manage Date and complex object (only JSON for now)
 
 The actual functionality are:
 + get a JSON with all the values from JSON-A that are changed or the keys added respect JSON-B
