@@ -6,16 +6,13 @@ const ignore = Symbol('ignore');
 
 const mustAssignValue = (value, checkValue, controlType) => {
   switch (controlType) {
-    case 'only-changed':
-      if (value !== undefined && checkValue !== undefined) {
-        return value !== checkValue;
-      }
-      return false;
     case 'only-add':
       return checkValue === undefined;
     case 'only-remove':
-      // TODO
-      return true;
+      return checkValue === undefined && value !== undefined;
+    case 'only-changed':
+      return value !== undefined && checkValue !== undefined && value !== checkValue;
+    case 'only-add-change':
     default:
       return value !== checkValue;
   }
@@ -25,37 +22,47 @@ const mustAssignObject = object => Object.keys(object).length > 0;
 
 const mustAssignArray = array => array.length > 0;
 
-const valueToAssign = (value, checkValue, opts = {}) => {
-  // console.log(`${value} vs ${checkValue}`);
-  if (_.isObjectLike(value)) {
-    const diffValue = differenceValues(value, checkValue, opts);
-    if (mustAssignObject(diffValue)) {
-      return diffValue;
+const compare = (base, comparison, comparingType) => {
+  if (_.isObjectLike(base)) {
+    if (_.isArray(base)) {
+      const comparisonArray = comparison || [];
+      const newArray = base
+        .map((e, i) => compare(e, comparisonArray[i], comparingType))
+        .filter(e => e !== ignore);
+      if (mustAssignArray(newArray)) {
+        return newArray;
+      }
+    } else {
+      const object = transformObject(base, comparison, comparingType);
+      if (mustAssignObject(object)) {
+        return object;
+      }
     }
-  } else if (mustAssignValue(value, checkValue, opts.extract)) {
-    return value;
+  } else if (mustAssignValue(base, comparison, comparingType)) {
+    return base;
   }
   return ignore;
 };
 
-function differenceValues(newJson, oldJson, opts = {}) {
-  return _.transform(newJson, (result, value, key) => {
-    if (_.isArray(value)) {
-      const arr2 = oldJson[key];
-      const arrrrr = value
-        .map((e, i) => valueToAssign(e, arr2[i], opts))
-        .filter(e => e !== ignore);
-
-      if (mustAssignArray(arrrrr)) {
-        result[key] = arrrrr;
-      }
-    } else {
-      const toAssign = valueToAssign(value, oldJson[key], opts);
-      if (toAssign !== ignore) {
-        result[key] = toAssign;
-      }
+const transformObject = (newJson, oldJson, comparingType) =>
+  _.transform(newJson, (result, value, key) => {
+    const compareVal = oldJson !== undefined ? oldJson[key] : undefined;
+    const out = compare(value, compareVal, comparingType);
+    if (out !== ignore) {
+      // FIXME: doesn't works..
+      // Object.defineProperty(result, key, { value: out, writable: true });
+      result[key] = out;
     }
   }, {});
+
+function differenceValues(newJson, oldJson, opts = {}) {
+  let out;
+  if (opts.extract === 'only-remove') {
+    out = transformObject(oldJson, newJson, opts.extract);
+  } else {
+    out = transformObject(newJson, oldJson, opts.extract);
+  }
+  return out;
 }
 
 module.exports = differenceValues;
