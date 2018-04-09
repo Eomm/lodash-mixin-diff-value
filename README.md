@@ -34,6 +34,14 @@ const diff = _.differenceValues(editedJson, originalJson[, options]);
 + `only-add-change`: like `only-add` + `only-changed`
 
 
+## Test
+
+For run the tests simply execute:
+```
+npm test
+```
+
+
 ## Example
 
 See test for more examples.
@@ -94,6 +102,7 @@ const out = _.differenceValues(newObj, oldObj);
 
 + JSDoc
 + Autoloading mixin and improve lodash dependancies
++ More test and validity-check
 + Manage Date and functions
 
 
