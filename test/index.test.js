@@ -28,16 +28,39 @@ const set = (json, paths, value) => paths.forEach((p) => {
 const add = (json, paths) => set(json, paths, 'ADD');
 const change = (json, paths) => set(json, paths, 'CHANGE');
 const remove = (json, paths) => _.omit(json, paths);
+const keep = (json, paths) => _.pick(json, paths);
+// const debug = o => console.log(JSON.stringify(o, null, 2));
 
 describe('mixin diff-value test', () => {
   let newJson;
   beforeEach(() => { newJson = clone(baseJson); });
 
   it('nothing changed', () => {
-    const diff = _.differenceValues(newJson, baseJson, { extract: 'only-changed' });
+    const diff = _.differenceValues(newJson, baseJson);
     expect(diff).toMatchObject({});
     expect(Object.keys(diff)).toHaveLength(0);
   });
+
+  it('only-changed and added', () => {
+    const paths = [
+      'a',
+      'json.d.deep[0]',
+      'json.d.deep[1].mode',
+    ];
+
+    change(newJson, paths);
+    add(newJson, ['newKey', 'json.d.deep']);
+
+    const diff = _.differenceValues(newJson, baseJson);
+
+    const rightJson = {};
+    change(rightJson, paths);
+    add(rightJson, ['newKey', 'json.d.deep']);
+
+    const compare = _.isEqual(diff, rightJson);
+    expect(compare).toBeTruthy();
+  });
+
 
   it('only-changed values', () => {
     const paths = [
@@ -80,12 +103,12 @@ describe('mixin diff-value test', () => {
   });
 
   it('only-remove values', () => {
-    const removedFields = ['a', 'o', 'json.d', 'intarr'];
+    const removedFields = ['a', 'o', 'json.d', 'intarr', 'arr[0]'];
     newJson = remove(newJson, removedFields);
 
     const diff = _.differenceValues(newJson, baseJson, { extract: 'only-remove' });
 
-    const rightJson = remove(baseJson, removedFields);
+    const rightJson = keep(baseJson, removedFields);
     const compare = _.isEqual(diff, rightJson);
     expect(compare).toBeTruthy();
   });
