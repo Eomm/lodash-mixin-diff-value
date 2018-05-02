@@ -6,5 +6,10 @@
   ],
   "parserOptions": {
     "sourceType": "script"
+  },
+  "rules": {
+    "global-require": "warn",
+    "no-param-reassign": "warn",
+    "no-use-before-define": "off"
   }
 }

@@ -101,7 +101,6 @@ const out = _.differenceValues(newObj, oldObj);
 ## Todo
 
 + JSDoc
-+ Autoloading mixin and improve lodash dependancies
 + More test and validity-check
 + Manage Date and functions
 

@@ -1,6 +1,11 @@
 'use strict';
 
-const _ = require('lodash');
+const _ = {
+  transform: require('lodash.transform'),
+  isObjectLike: require('lodash.isobjectlike'),
+  isArray: require('lodash.isarraylike'),
+};
+
 
 const ignore = Symbol('ignore');
 
