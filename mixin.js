@@ -4,12 +4,22 @@ const _ = {
   transform: require('lodash.transform'),
   isObjectLike: require('lodash.isobjectlike'),
   isArray: require('lodash.isarraylike'),
+  isDate: require('lodash.isdate'),
 };
 
 
 const ignore = Symbol('ignore');
 
 const mustAssignValue = (value, checkValue, controlType) => {
+
+  // TODO check if value &| checkValue are string in ${date_format}
+  if (_.isDate(value)) {
+    value = value.toJSON();
+  }
+  if (_.isDate(checkValue)) {
+    checkValue = checkValue.toJSON();
+  }
+
   switch (controlType) {
     case 'only-add':
       return checkValue === undefined;
@@ -28,7 +38,7 @@ const mustAssignObject = object => Object.keys(object).length > 0;
 const mustAssignArray = array => array.length > 0;
 
 const compare = (base, comparison, comparingType) => {
-  if (_.isObjectLike(base)) {
+  if (_.isObjectLike(base) && !_.isDate(base)) {
     if (_.isArray(base)) {
       const comparisonArray = comparison || [];
       const newArray = base

@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "lodash.isarraylike": "^4.2.0",
+    "lodash.isdate": "^4.0.1",
     "lodash.isobjectlike": "^4.0.0",
     "lodash.transform": "^4.6.0"
   },
