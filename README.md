@@ -14,7 +14,7 @@ npm install lodash-mixin-diff-value
 
 ```js
 const _ = require('lodash');
-const differenceValues = require('./lodash-mixin-diff-value');
+const differenceValues = require('lodash-mixin-diff-value');
 
 _.mixin({ differenceValues });
 
@@ -23,10 +23,12 @@ const diff = _.differenceValues(editedJson, originalJson[, options]);
 
 `options` is a json with the fields:
 
-| Key | Values | Default |
-| --- | ------ | ------- |
-| extract | `[only-add, only-remove, only-changed, only-add-change]` | `only-add-change`
-
+| Key | Values | Default | Description |
+| --- | ------ | ------- | ----------- |
+| extract | `[only-add, only-remove, only-changed, only-add-change]` | `only-add-change` | Described below
+| dateCheck | `true` or `false` | `true` | For performance: deactivate the date object and string evaluation
+| dateFormatIn | [momentjs formats](https://momentjs.com/docs/#/parsing/string-format/) | `YYYY-MM-DDTHH:mm:ss.sssZ` | The format to use to evaluate string during date checking
+| dateFormatOut | [momentjs formats](https://momentjs.com/docs/#/parsing/string-format/) | `YYYY-MM-DDTHH:mm:ss.sssZ` | The format to use to evaluate date-string comparison
 
 ### Field: extract
 
@@ -34,6 +36,15 @@ const diff = _.differenceValues(editedJson, originalJson[, options]);
 + `only-remove`: will return only field that not occurs in `editedJson` and are in `originalJson`
 + `only-changed`: will return only field that occurs in `editedJson` and `originalJson` too
 + `only-add-change`: like `only-add` + `only-changed`
+
+### Field: dateCheck
+
+This activate the controls for the date object, evaluated as [date.toJSON()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toJSON) string, or date string evaluated with `options.dateFormat`.
+
+### Field: dateFormat
+
+This format let you to execute the diff value on portion of the date string not only on the complete date.
+This cost in performance because all the string will be checked if match with this format.
 
 
 ## Test
