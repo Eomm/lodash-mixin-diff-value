@@ -5,10 +5,11 @@
 version: 2
 jobs:
   build:
-    branches:
-      only:
-        - master
-        - /feature.*/
+    # This config works only if there aren't workflows
+    # branches:
+    #   only:
+    #     -master
+    #     -/feature.*/
     docker:
       # specify the version you desire here
       - image: circleci/node:7.10
@@ -43,8 +44,6 @@ jobs:
     machine:
         enabled: true
     working_directory: ~/repo
-    environment:
-      - HELLO: WORLD
     steps:
       - checkout
       - run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
@@ -59,7 +58,7 @@ workflows:
       jobs:
         - build
         - npm_publish:
-            require:
+            requires:
               - build
             filters:
               tags:
