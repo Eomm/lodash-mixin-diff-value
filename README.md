@@ -1,4 +1,6 @@
 # lodash-mixin-diff-value
+[![npm version](https://badge.fury.io/js/lodash-mixin-diff-value.svg)](https://badge.fury.io/js/lodash-mixin-diff-value) [![CircleCI](https://circleci.com/gh/Eomm/lodash-mixin-diff-value/tree/master.svg?style=svg)](https://circleci.com/gh/Eomm/lodash-mixin-diff-value/tree/master)
+
 This is a lodash mixin for getting a JSON object that rappresent the value variation of a JSON respect another.
 
 ## Installation
