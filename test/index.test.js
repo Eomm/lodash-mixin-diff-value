@@ -72,6 +72,38 @@ describe('mixin diff-value test', () => {
   });
 
 
+  it('date test with different time and same day', () => {
+    const paths = [
+      'a',
+      'json.d.deep[0]',
+      'json.d.deep[1].mode',
+    ];
+
+    const pathsDate = ['testDateStringCustomFormat.myDate'];
+    // NB: changed only the hours!
+    const changedDate = '21/10/2015 05:21:00';
+
+    change(newJson, paths);
+    changeWithValue(newJson, pathsDate, changedDate);
+
+    const options = {
+      dateFormatIn: 'DD/MM/YYYY HH:mm:ss',
+      dateFormatOut: 'YYYY-MM-DD',
+    };
+    const diff = _.differenceValues(newJson, baseJson, options);
+
+    /**
+     * the field 'testDateStringCustomFormat.myDate' isn't expected,
+     * because the format check only the date e not the time
+     */
+    const rightJson = {};
+    change(rightJson, paths);
+
+    const compare = _.isEqual(diff, rightJson);
+    expect(compare).toBeTruthy();
+  });
+
+
   it('only-changed values', () => {
     const paths = [
       'a',
