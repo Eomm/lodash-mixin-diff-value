@@ -33,7 +33,7 @@ const changeWithValue = (json, paths, value) => set(json, paths, value);
 const change = (json, paths) => changeWithValue(json, paths, 'CHANGE');
 const remove = (json, paths) => _.omit(json, paths);
 const keep = (json, paths) => _.pick(json, paths);
-const debug = o => console.log(JSON.stringify(o, null, 2));
+// const debug = o => console.log(JSON.stringify(o, null, 2));
 
 describe('mixin diff-value test', () => {
   let newJson;
@@ -98,6 +98,39 @@ describe('mixin diff-value test', () => {
      */
     const rightJson = {};
     change(rightJson, paths);
+
+    const compare = _.isEqual(diff, rightJson);
+    expect(compare).toBeTruthy();
+  });
+
+
+  it('date test different in-out', () => {
+    const paths = [
+      'a',
+      'json.d.deep[0]',
+      'json.d.deep[1].mode',
+    ];
+
+    const pathsDate = ['testDateStringCustomFormat.myDate'];
+    // NB: changed only the minutes!
+    const changedDate = '21/10/2015 05:55:00';
+
+    change(newJson, paths);
+    changeWithValue(newJson, pathsDate, changedDate);
+
+    const options = {
+      dateFormatIn: 'DD/MM/YYYY HH:mm:ss',
+      dateFormatOut: 'YYYY-MM-DD HH',
+    };
+    const diff = _.differenceValues(newJson, baseJson, options);
+
+    /**
+     * the field 'testDateStringCustomFormat.myDate' is expected,
+     * because the format check date and hours
+     */
+    const rightJson = {};
+    change(rightJson, paths);
+    changeWithValue(rightJson, pathsDate, changedDate);
 
     const compare = _.isEqual(diff, rightJson);
     expect(compare).toBeTruthy();
