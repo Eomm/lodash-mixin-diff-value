@@ -5,7 +5,9 @@
   "main": "mixin.js",
   "scripts": {
     "test": "jest --coverage",
-    "update-modules": "npm update && npm prune --production"
+    "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
+    "update-modules": "npm update && npm prune --production",
+    "coverage": "npm test && npm run coveralls"
   },
   "keywords": [
     "lodash",
@@ -33,6 +35,7 @@
     "eslint-plugin-import": "^2.12.0",
     "eslint-plugin-jest": "^21.17.0",
     "jest": "^22.4.4",
-    "lodash": "^4.17.10"
+    "lodash": "^4.17.10",
+    "coveralls": "^3.0.1"
   }
 }
