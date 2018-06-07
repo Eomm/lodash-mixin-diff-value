@@ -40,14 +40,34 @@ jobs:
         
       # run tests!
       - run: npm test
+
+      - save_cache:
+          paths:
+            - coverage
+          key: v1-coverage-{{ checksum "package.json" }}
   npm_publish:
     machine:
         enabled: true
     working_directory: ~/repo
     steps:
+      - restore_cache:
+          keys:
+          - v1-coverage-{{ checksum "package.json" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-coverage-
+      - run:
+          name: Set COVERALLS authentication.
+          command: 'echo "repo_token: ${COVERALLS_TOKEN}" > ~/.coveralls.yml'
+      - run:
+          name: Upload coverage
+          command: npm run coveralls
       - checkout
-      - run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
-      - run: npm publish
+      - run:
+          name: Set NPM authentication.
+          command: 'echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc'
+      - run:
+          name: Publish the module to npm.
+          command: npm publish --access=public
 
 workflows:
     version: 2
@@ -74,3 +94,8 @@ workflows:
         - npm_publish:
             requires:
               - build
+            filters:
+              branches:
+                ignore: /.*/
+              tags:
+                only: '/^v[\d.]+$/'
