@@ -1,5 +1,5 @@
 # lodash-mixin-diff-value
-[![npm version](https://badge.fury.io/js/lodash-mixin-diff-value.svg)](https://badge.fury.io/js/lodash-mixin-diff-value) [![CircleCI](https://circleci.com/gh/Eomm/lodash-mixin-diff-value/tree/master.svg?style=svg)](https://circleci.com/gh/Eomm/lodash-mixin-diff-value/tree/master)
+[![npm version](https://badge.fury.io/js/lodash-mixin-diff-value.svg)](https://badge.fury.io/js/lodash-mixin-diff-value) [![Coverage Status](https://coveralls.io/repos/github/Eomm/lodash-mixin-diff-value/badge.svg?branch=master)](https://coveralls.io/github/Eomm/lodash-mixin-diff-value?branch=master) [![CircleCI](https://circleci.com/gh/Eomm/lodash-mixin-diff-value/tree/master.svg?style=svg)](https://circleci.com/gh/Eomm/lodash-mixin-diff-value/tree/master)
 
 This is a lodash mixin for getting a JSON object that rappresent the value variation of a JSON respect another.
 
@@ -115,7 +115,7 @@ const out = _.differenceValues(newObj, oldObj);
 
 + JSDoc
 + More test and validity-check
-+ Manage Date and functions
++ Managen functions
 
 
 ## License
