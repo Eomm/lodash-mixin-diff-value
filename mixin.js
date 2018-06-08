@@ -84,8 +84,12 @@ const transformObject = (newJson, oldJson, opts) =>
     const compareVal = oldJson !== undefined ? oldJson[key] : undefined;
     const out = compare(value, compareVal, opts);
     if (out !== ignore) {
-      // FIXME: doesn't works..
-      // Object.defineProperty(result, key, { value: out, writable: true });
+      // Object.defineProperty(result, key, {
+      //   value: out,
+      //   writable: true,
+      //   enumerable: true,
+      //   configurable: false,
+      // });
       result[key] = out;
     }
   }, {});
