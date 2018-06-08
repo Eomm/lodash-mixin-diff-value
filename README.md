@@ -39,7 +39,10 @@ const diff = _.differenceValues(editedJson, originalJson[, options]);
 
 ### Field: dateCheck
 
-This activate the controls for the date object, evaluated as [date.toJSON()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toJSON) string, or date string evaluated with `options.dateFormat`.
+If `true`: activate deep controls for the date object and strings. The input are evaluated with the `options.dateFormatIn` format and compared using the `options.dateFormatOut` format.
+This will enable you to read corectly a date in a format like `options.dateFormatIn: YYYY-MM-DD` but consider the date changed only if the year and month change `options.dateFormatOut: YYYY-MM`.
+
+If `false`: only Date objects are evaluated as [date.toJSON()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toJSON) for comparison.
 
 ### Field: dateFormat
 

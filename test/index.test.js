@@ -33,7 +33,7 @@ const changeWithValue = (json, paths, value) => set(json, paths, value);
 const change = (json, paths) => changeWithValue(json, paths, 'CHANGE');
 const remove = (json, paths) => _.omit(json, paths);
 const keep = (json, paths) => _.pick(json, paths);
-// const debug = o => console.log(JSON.stringify(o, null, 2));
+const debug = o => console.log(JSON.stringify(o, null, 2));
 
 describe('mixin diff-value test', () => {
   let newJson;
@@ -127,6 +127,36 @@ describe('mixin diff-value test', () => {
     /**
      * the field 'testDateStringCustomFormat.myDate' is expected,
      * because the format check date and hours
+     */
+    const rightJson = {};
+    change(rightJson, paths);
+    changeWithValue(rightJson, pathsDate, changedDate);
+
+    const compare = _.isEqual(diff, rightJson);
+    expect(compare).toBeTruthy();
+  });
+
+
+  it('date test without dateCheck', () => {
+    const paths = ['a'];
+
+    const pathsDate = ['testDateStringCustomFormat.myDate'];
+    // NB: changed only the hours!
+    const changedDate = '21/10/2015 05:21:00';
+
+    change(newJson, paths);
+    changeWithValue(newJson, pathsDate, changedDate);
+
+    const options = {
+      dateCheck: false,
+      dateFormatIn: 'DD/MM/YYYY HH:mm:ss',
+      dateFormatOut: 'YYYY-MM-DD',
+    };
+    const diff = _.differenceValues(newJson, baseJson, options);
+
+    /**
+     * the field 'testDateStringCustomFormat.myDate' now is expected,
+     * because the format check didn't happen
      */
     const rightJson = {};
     change(rightJson, paths);

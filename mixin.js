@@ -20,25 +20,24 @@ const DEFAULT_OPTIONS = {
   dateFormatOut: 'YYYY-MM-DDTHH:mm:ss.sssZ',
 };
 
-const evaluateDate = (value, formatIn, formatOut) => {
-  // TODO: add a fast pattern matching before
+const evaluateDate = (value, verifyFormat, formatIn, formatOut) => {
   // TODO: add date comparison only for some keys?
   if (_.isDate(value)) {
     value = value.toJSON();
   }
 
-  const analize = moment.utc(value, formatIn, true);
-  if (analize.isValid()) {
-    return analize.format(formatOut);
+  if (verifyFormat === true) {
+    const analize = moment.utc(value, formatIn, true);
+    if (analize.isValid()) {
+      return analize.format(formatOut);
+    }
   }
   return value;
 };
 
 const mustAssignValue = (value, checkValue, opts) => {
-  if (opts.dateCheck === true) {
-    value = evaluateDate(value, opts.dateFormatIn, opts.dateFormatOut);
-    checkValue = evaluateDate(checkValue, opts.dateFormatIn, opts.dateFormatOut);
-  }
+  value = evaluateDate(value, opts.dateCheck, opts.dateFormatIn, opts.dateFormatOut);
+  checkValue = evaluateDate(checkValue, opts.dateCheck, opts.dateFormatIn, opts.dateFormatOut);
 
   switch (opts.extract) {
     case 'only-add':
