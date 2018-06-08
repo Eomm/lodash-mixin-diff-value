@@ -50,18 +50,19 @@ jobs:
         enabled: true
     working_directory: ~/repo
     steps:
+      - checkout
       - restore_cache:
           keys:
           - v1-coverage-{{ checksum "package.json" }}
           # fallback to using the latest cache if no exact match is found
           - v1-coverage-
+      - run: npm install
       - run:
           name: Set COVERALLS authentication.
           command: 'echo "repo_token: ${COVERALLS_TOKEN}" > ~/.coveralls.yml'
       - run:
           name: Upload coverage
-          command: npm run coveralls
-      - checkout
+          command: npm run coverage
       - run:
           name: Set NPM authentication.
           command: 'echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc'
