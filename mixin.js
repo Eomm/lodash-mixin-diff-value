@@ -20,7 +20,7 @@ const DEFAULT_OPTIONS = {
   dateFormatOut: 'YYYY-MM-DDTHH:mm:ss.sssZ',
 };
 
-const evaluateDate = (value, verifyFormat, formatIn, formatOut) => {
+function evaluateDate(value, verifyFormat, formatIn, formatOut) {
   // TODO: add date comparison only for some keys?
   if (_.isDate(value)) {
     value = value.toJSON();
@@ -33,9 +33,9 @@ const evaluateDate = (value, verifyFormat, formatIn, formatOut) => {
     }
   }
   return value;
-};
+}
 
-const mustAssignValue = (value, checkValue, opts) => {
+function mustAssignValue(value, checkValue, opts) {
   value = evaluateDate(value, opts.dateCheck, opts.dateFormatIn, opts.dateFormatOut);
   checkValue = evaluateDate(checkValue, opts.dateCheck, opts.dateFormatIn, opts.dateFormatOut);
 
@@ -50,13 +50,17 @@ const mustAssignValue = (value, checkValue, opts) => {
     default:
       return value !== checkValue;
   }
-};
+}
 
-const mustAssignObject = object => Object.keys(object).length > 0;
+function mustAssignObject(object) {
+  return Object.keys(object).length > 0;
+}
 
-const mustAssignArray = array => array.length > 0;
+function mustAssignArray(array) {
+  return array.length > 0;
+}
 
-const compare = (base, comparison, opts) => {
+function compare(base, comparison, opts) {
   if (_.isObjectLike(base) && !_.isDate(base)) {
     if (_.isArray(base)) {
       const comparisonArray = comparison || [];
@@ -76,10 +80,10 @@ const compare = (base, comparison, opts) => {
     return base;
   }
   return ignore;
-};
+}
 
-const transformObject = (newJson, oldJson, opts) =>
-  _.transform(newJson, (result, value, key) => {
+function transformObject(newJson, oldJson, opts) {
+  return _.transform(newJson, (result, value, key) => {
     const compareVal = oldJson !== undefined ? oldJson[key] : undefined;
     const out = compare(value, compareVal, opts);
     if (out !== ignore) {
@@ -92,8 +96,9 @@ const transformObject = (newJson, oldJson, opts) =>
       result[key] = out;
     }
   }, {});
+}
 
-function differenceValues(newJson, oldJson, opts = {}) {
+module.exports = function differenceValues(newJson, oldJson, opts = {}) {
   let out;
   _.defaults(opts, DEFAULT_OPTIONS);
   if (opts.extract === 'only-remove') {
@@ -102,6 +107,4 @@ function differenceValues(newJson, oldJson, opts = {}) {
     out = transformObject(newJson, oldJson, opts);
   }
   return out;
-}
-
-module.exports = differenceValues;
+};
