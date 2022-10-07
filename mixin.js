@@ -1,6 +1,6 @@
 'use strict'
 
-const moment = require('moment')
+const { DateTime } = require('luxon')
 
 const _ = {
   transform: require('lodash.transform'),
@@ -15,20 +15,29 @@ const ignore = Symbol('ignore')
 const DEFAULT_OPTIONS = {
   extract: 'only-add-change',
   dateCheck: true,
-  dateFormatIn: 'YYYY-MM-DDTHH:mm:ss.sssZ',
-  dateFormatOut: 'YYYY-MM-DDTHH:mm:ss.sssZ'
+  dateFormatIn: 'yyyy-mm-dd\'T\'HH:mm:ss.SSSZ',
+  dateFormatOut: 'yyyy-mm-dd\'T\'HH:mm:ss.SSSZ'
 }
 
 function evaluateDate (value, verifyFormat, formatIn, formatOut) {
   // TODO: add date comparison only for some keys?
-  if (_.isDate(value)) {
-    value = value.toJSON()
-  }
 
-  if (verifyFormat === true) {
-    const analize = moment.utc(value, formatIn, true)
-    if (analize.isValid()) {
-      return analize.format(formatOut)
+  if (verifyFormat === true &&
+      (typeof value === 'string' || typeof value === 'object')) {
+    const isDate = _.isDate(value)
+    let analize
+    if (isDate && typeof value === 'object') {
+      analize = DateTime.fromJSDate(value, { zone: 'utc' }).toUTC()
+    } else if (isDate) {
+      analize = DateTime.fromISO(value, { zone: 'utc' })
+    } else {
+      analize = DateTime.fromFormat(value, formatIn, { zone: 'utc' })
+    }
+
+    if (analize.isValid) {
+      return formatOut === DEFAULT_OPTIONS.dateFormatOut
+        ? analize.toISO()
+        : analize.toFormat(formatOut)
     }
   }
   return value

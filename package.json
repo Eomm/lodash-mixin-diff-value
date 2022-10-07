@@ -5,7 +5,7 @@
   "main": "mixin.js",
   "scripts": {
     "lint": "standard --env jest",
-    "lint:fix": "standard --env jest --fix",
+    "lint:fix": "standard --fix",
     "test": "tap test/**/*.test.js"
   },
   "keywords": [
@@ -27,7 +27,7 @@
     "lodash.isdate": "^4.0.1",
     "lodash.isobjectlike": "^4.0.0",
     "lodash.transform": "^4.6.0",
-    "moment": "^2.22.2"
+    "luxon": "^3.0.4"
   },
   "devDependencies": {
     "lodash": "^4.17.11",
