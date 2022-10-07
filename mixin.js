@@ -1,6 +1,7 @@
 'use strict'
 
-const { DateTime } = require('luxon')
+const { parse, parseISO } = require('date-fns')
+const { format, utcToZonedTime } = require('date-fns-tz')
 
 const _ = {
   transform: require('lodash.transform'),
@@ -15,29 +16,31 @@ const ignore = Symbol('ignore')
 const DEFAULT_OPTIONS = {
   extract: 'only-add-change',
   dateCheck: true,
-  dateFormatIn: 'yyyy-mm-dd\'T\'HH:mm:ss.SSSZ',
-  dateFormatOut: 'yyyy-mm-dd\'T\'HH:mm:ss.SSSZ'
+  dateFormatIn: "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+  dateFormatOut: "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
 }
 
 function evaluateDate (value, verifyFormat, formatIn, formatOut) {
   // TODO: add date comparison only for some keys?
 
+  if (value instanceof Date) {
+    value = value.toISOString()
+  }
+
   if (verifyFormat === true &&
       (typeof value === 'string' || typeof value === 'object')) {
-    const isDate = _.isDate(value)
-    let analize
-    if (isDate && typeof value === 'object') {
-      analize = DateTime.fromJSDate(value, { zone: 'utc' }).toUTC()
-    } else if (isDate) {
-      analize = DateTime.fromISO(value, { zone: 'utc' })
-    } else {
-      analize = DateTime.fromFormat(value, formatIn, { zone: 'utc' })
+    let isValid = false
+    try {
+      if (typeof value === 'string' && formatIn === DEFAULT_OPTIONS.dateFormatIn) {
+        isValid = parseISO(value)
+      } else {
+        isValid = parse(value, formatIn, new Date())
+      }
+    } catch (error) {
     }
 
-    if (analize.isValid) {
-      return formatOut === DEFAULT_OPTIONS.dateFormatOut
-        ? analize.toISO()
-        : analize.toFormat(formatOut)
+    if (isValid && !Number.isNaN(isValid.getTime())) {
+      return format(utcToZonedTime(isValid, 'UTC'), formatOut, { timeZone: 'UTC' })
     }
   }
   return value

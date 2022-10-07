@@ -87,8 +87,8 @@ t.test('date test with different time and same day', (t) => {
   changeWithValue(newJson, pathsDate, changedDate)
 
   const options = {
-    dateFormatIn: 'dd/mm/yyyy HH:mm:ss',
-    dateFormatOut: 'yyyy-mm-dd'
+    dateFormatIn: 'dd/MM/yyyy HH:mm:ss',
+    dateFormatOut: 'yyyy-MM-dd'
   }
   const diff = _.differenceValues(newJson, baseJson, options)
 
@@ -118,8 +118,8 @@ t.test('date test different in-out', (t) => {
   changeWithValue(newJson, pathsDate, changedDate)
 
   const options = {
-    dateFormatIn: 'DD/MM/YYYY HH:mm:ss',
-    dateFormatOut: 'YYYY-MM-DD HH'
+    dateFormatIn: 'dd/MM/yyyy HH:mm:ss',
+    dateFormatOut: 'yyyy-MM-dd HH'
   }
   const diff = _.differenceValues(newJson, baseJson, options)
 
@@ -147,8 +147,8 @@ t.test('date test without dateCheck', (t) => {
 
   const options = {
     dateCheck: false,
-    dateFormatIn: 'DD/MM/YYYY HH:mm:ss',
-    dateFormatOut: 'YYYY-MM-DD'
+    dateFormatIn: 'dd/MM/yyyy HH:mm:ss',
+    dateFormatOut: 'yyyy-MM-dd'
   }
   const diff = _.differenceValues(newJson, baseJson, options)
 
