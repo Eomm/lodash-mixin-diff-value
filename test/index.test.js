@@ -1,6 +1,7 @@
 'use strict'
 
 const _ = require('lodash')
+const t = require('tap')
 const differenceValues = require('../mixin')
 
 _.mixin({ differenceValues })
@@ -34,17 +35,19 @@ const change = (json, paths) => changeWithValue(json, paths, 'CHANGE')
 const remove = (json, paths) => _.omit(json, paths)
 const keep = (json, paths) => _.pick(json, paths)
 
-describe('mixin diff-value test', () => {
+t.test('mixin diff-value test', (t) => {
   let newJson
-  beforeEach(() => { newJson = clone(baseJson) })
+  t.beforeEach((t) => { newJson = clone(baseJson) })
 
-  it('nothing changed', () => {
+  t.test('nothing changed', (t) => {
     const diff = _.differenceValues(newJson, baseJson)
-    expect(diff).toMatchObject({})
-    expect(Object.keys(diff)).toHaveLength(0)
+    t.plan(2)
+    t.strictSame(diff, {})
+    t.strictSame(Object.keys(diff), [])
   })
 
-  it('only-changed and added', () => {
+  t.test('only-changed and added', (t) => {
+    t.plan(1)
     const paths = [
       'a',
       'json.d.deep[0]',
@@ -66,11 +69,11 @@ describe('mixin diff-value test', () => {
     const rightJson = {}
     sideEffectEditJson(rightJson)
 
-    const compare = _.isEqual(diff, rightJson)
-    expect(compare).toBeTruthy()
+    t.strictSame(diff, rightJson)
   })
 
-  it('date test with different time and same day', () => {
+  t.test('date test with different time and same day', (t) => {
+    t.plan(1)
     const paths = [
       'a',
       'json.d.deep[0]',
@@ -97,11 +100,11 @@ describe('mixin diff-value test', () => {
     const rightJson = {}
     change(rightJson, paths)
 
-    const compare = _.isEqual(diff, rightJson)
-    expect(compare).toBeTruthy()
+    t.strictSame(diff, rightJson)
   })
 
-  it('date test different in-out', () => {
+  t.test('date test different in-out', (t) => {
+    t.plan(1)
     const paths = [
       'a',
       'json.d.deep[0]',
@@ -129,11 +132,11 @@ describe('mixin diff-value test', () => {
     change(rightJson, paths)
     changeWithValue(rightJson, pathsDate, changedDate)
 
-    const compare = _.isEqual(diff, rightJson)
-    expect(compare).toBeTruthy()
+    t.strictSame(diff, rightJson)
   })
 
-  it('date test without dateCheck', () => {
+  t.test('date test without dateCheck', (t) => {
+    t.plan(1)
     const paths = ['a']
 
     const pathsDate = ['testDateStringCustomFormat.myDate']
@@ -158,11 +161,11 @@ describe('mixin diff-value test', () => {
     change(rightJson, paths)
     changeWithValue(rightJson, pathsDate, changedDate)
 
-    const compare = _.isEqual(diff, rightJson)
-    expect(compare).toBeTruthy()
+    t.strictSame(diff, rightJson)
   })
 
-  it('only-changed values', () => {
+  t.test('only-changed values', (t) => {
+    t.plan(1)
     const paths = [
       'a',
       'json.d.deep[0]',
@@ -178,11 +181,11 @@ describe('mixin diff-value test', () => {
     const rightJson = {}
     change(rightJson, paths)
 
-    const compare = _.isEqual(diff, rightJson)
-    expect(compare).toBeTruthy()
+    t.strictSame(diff, rightJson)
   })
 
-  it('only-add values', () => {
+  t.test('only-add values', (t) => {
+    t.plan(1)
     const paths = [
       'o.sub',
       'json.d.deep[0]',
@@ -198,18 +201,19 @@ describe('mixin diff-value test', () => {
     // added [0] otherwise lodash will use the not-existing field like key-value pair
     add(rightJson, ['newKey', 'json.d.deep[0]', 'json.c'])
 
-    const compare = _.isEqual(diff, rightJson)
-    expect(compare).toBeTruthy()
+    t.strictSame(diff, rightJson)
   })
 
-  it('only-remove values', () => {
+  t.test('only-remove values', (t) => {
+    t.plan(1)
     const removedFields = ['a', 'o', 'json.d', 'intarr', 'arr[0]']
     newJson = remove(newJson, removedFields)
 
     const diff = _.differenceValues(newJson, baseJson, { extract: 'only-remove' })
 
     const rightJson = keep(baseJson, removedFields)
-    const compare = _.isEqual(diff, rightJson)
-    expect(compare).toBeTruthy()
+    t.strictSame(diff, rightJson)
   })
+
+  t.end()
 })
