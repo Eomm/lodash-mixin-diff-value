@@ -1,6 +1,7 @@
 'use strict'
 
-const moment = require('moment')
+const { parse, parseISO } = require('date-fns')
+const { format, utcToZonedTime } = require('date-fns-tz')
 
 const _ = {
   transform: require('lodash.transform'),
@@ -15,20 +16,31 @@ const ignore = Symbol('ignore')
 const DEFAULT_OPTIONS = {
   extract: 'only-add-change',
   dateCheck: true,
-  dateFormatIn: 'YYYY-MM-DDTHH:mm:ss.sssZ',
-  dateFormatOut: 'YYYY-MM-DDTHH:mm:ss.sssZ'
+  dateFormatIn: "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+  dateFormatOut: "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
 }
 
 function evaluateDate (value, verifyFormat, formatIn, formatOut) {
   // TODO: add date comparison only for some keys?
-  if (_.isDate(value)) {
-    value = value.toJSON()
+
+  if (value instanceof Date) {
+    value = value.toISOString()
   }
 
-  if (verifyFormat === true) {
-    const analize = moment.utc(value, formatIn, true)
-    if (analize.isValid()) {
-      return analize.format(formatOut)
+  if (verifyFormat === true &&
+      (typeof value === 'string' || typeof value === 'object')) {
+    let isValid = false
+    try {
+      if (typeof value === 'string' && formatIn === DEFAULT_OPTIONS.dateFormatIn) {
+        isValid = parseISO(value)
+      } else {
+        isValid = parse(value, formatIn, new Date())
+      }
+    } catch (error) {
+    }
+
+    if (isValid && !Number.isNaN(isValid.getTime())) {
+      return format(utcToZonedTime(isValid, 'UTC'), formatOut, { timeZone: 'UTC' })
     }
   }
   return value
