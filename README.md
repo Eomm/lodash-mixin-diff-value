@@ -30,8 +30,8 @@ const diff = _.differenceValues(editedJson, originalJson[, options]);
 | --- | ------ | ------- | ----------- |
 | extract | `[only-add, only-remove, only-changed, only-add-change]` | `only-add-change` | Described below
 | dateCheck | `true` or `false` | `true` | For performance: deactivate the date object and string evaluation
-| dateFormatIn | [momentjs formats](https://momentjs.com/docs/#/parsing/string-format/) | `YYYY-MM-DDTHH:mm:ss.sssZ` | The format to use to evaluate string during date checking
-| dateFormatOut | [momentjs formats](https://momentjs.com/docs/#/parsing/string-format/) | `YYYY-MM-DDTHH:mm:ss.sssZ` | The format to use to evaluate date-string comparison
+| dateFormatIn | [date-fns formats](https://date-fns.org/v2.29.3/docs/parse) | `yyyy-MM-dd'T'HH:mm:ss.SSS'Z'` | The format to use to evaluate string during date checking
+| dateFormatOut | [date-fns formats](https://date-fns.org/v2.29.3/docs/parse) | `yyyy-MM-dd'T'HH:mm:ss.SSS'Z'` | The format to use to evaluate date-string comparison
 
 ### Field: extract
 
@@ -43,9 +43,9 @@ const diff = _.differenceValues(editedJson, originalJson[, options]);
 ### Field: dateCheck
 
 If `true`: activate deep controls for the date object and strings. The input are evaluated with the `options.dateFormatIn` format and compared using the `options.dateFormatOut` format.
-This will enable you to read corectly a date in a format like `options.dateFormatIn: YYYY-MM-DD` but consider the date changed only if the year and month change `options.dateFormatOut: YYYY-MM`.
+This will enable you to read corectly a date in a format like `options.dateFormatIn: yyyy-MM-dd` but consider the date changed only if the year and month change `options.dateFormatOut: yyyy-MM`.
 
-If `false`: only Date objects are evaluated as [date.toJSON()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toJSON) for comparison.
+If `false`: only Date objects are evaluated as `date.toISOString()` for comparison.
 
 ### Field: dateFormat
 
@@ -125,12 +125,5 @@ const out = _.differenceValues(newObj, oldObj);
 
 
 ## License
-(The MIT License)
 
-Copyright (c) 2018 Manuel Spigolon <behemoth89@gmail.com>
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the 'Software'), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+Copyright [Manuel Spigolon](https://github.com/Eomm), Licensed under [MIT](./LICENSE).
